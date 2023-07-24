@@ -12,7 +12,8 @@ import mlflow.sklearn
 import mlflow.sklearn
 from mlflow.models.signature import infer_signature
 mlflow.set_experiment("Direct_sklearn")
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
+remote_url = "https://dagshub.com/dhanushnayak/mlflow_exp.mlflow"
+mlflow.set_tracking_uri(remote_url)
 iris = datasets.load_iris()
 iris_train = pd.DataFrame(iris.data, columns=iris.feature_names)
 import sys
@@ -32,9 +33,15 @@ with mlflow.start_run():
     print("Acc = {}".format(auc))
     mlflow.log_param("n",n)
     mlflow.log_metric("acc",auc)
+
+    signature = infer_signature(x_train, pred)
+
     tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
     if tracking_url_type_store != "file":
-
-            mlflow.sklearn.log_model(clf, "model")
+        mlflow.sklearn.log_model(
+                clf, "model", registered_model_name="Random_IRIS", signature=signature
+            )
+    else:
+            mlflow.sklearn.log_model(clf, "model", signature=signature)
     
