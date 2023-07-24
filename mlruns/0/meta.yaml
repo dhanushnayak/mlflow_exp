@@ -1,0 +1,4 @@
+artifact_location: file:///C:/Users/admin/Desktop/mlops/mlruns/0
+experiment_id: '0'
+lifecycle_stage: active
+name: Direct_sklearn
